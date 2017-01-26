@@ -1,0 +1,39 @@
+{
+  "name": "{{npmScope}}/{{npmName}}",
+  "version": "{{npmVersion}}",
+  "description": "Generating Swagger client for {{npmName}}",
+  "main": "index.js",
+  "scripts": {
+    "cleanup": "rimraf dist/bundles dist/src dist/index.d.ts dist/index.js dist/index.js.map dist/LICENCE dist/README.md",
+    "transpile": "ngc",
+    "package": "rollup -c",
+    "minify": "uglifyjs dist/bundles/{{npmName}}.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/{{npmName}}.umd.min.js",
+    "build": "npm run cleanup && npm run transpile && npm run package && npm run minify"
+  },
+  "keywords": [
+    "angular2",
+    "{{npmScope}}",
+    "service",
+    "rest",
+    "{{serviceName}}"
+  ],
+  "author": "{{npmAuthor}}",
+  "license": "{{npmLicense}}",
+  "dependencies": {
+    "@angular/core": "^2.4.0",
+    "@angular/common": "^2.4.0",
+    "@angular/http": "^2.4.0",
+    "reflect-metadata": "^0.1.8",
+    "rxjs": "^5.0.1",
+    "zone.js": "^0.7.2",
+    "class-transformer": "^0.1.3"
+  },
+  "devDependencies": {
+    "@angular/compiler": "^2.4.0",
+    "@angular/compiler-cli": "^2.4.0",
+    "rimraf": "^2.5.4",
+    "rollup": "^0.37.0",
+    "typescript": "~2.0.10",
+    "uglify-js": "^2.7.5"
+  }
+}
