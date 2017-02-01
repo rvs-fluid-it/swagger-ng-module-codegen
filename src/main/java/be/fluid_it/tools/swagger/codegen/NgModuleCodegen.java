@@ -16,6 +16,7 @@ public class NgModuleCodegen extends AbstractTypeScriptClientCodegen {
     private static final SimpleDateFormat SNAPSHOT_SUFFIX_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
 
     public static final String SERVICE_NAME = "serviceName";
+    public static final String C_SERVICE_NAME = "cServiceName";
     public static final String NPM_SCOPE = "npmScope";
     public static final String NPM_NAME = "npmName";
     public static final String NPM_VERSION = "npmVersion";
@@ -25,6 +26,7 @@ public class NgModuleCodegen extends AbstractTypeScriptClientCodegen {
     public static final String SNAPSHOT = "snapshot";
 
     protected String serviceName = null;
+    protected String cServiceName = null;
     protected String npmScope = null;
     protected String npmName = null;
     protected String npmVersion = "1.0.0";
@@ -46,6 +48,7 @@ public class NgModuleCodegen extends AbstractTypeScriptClientCodegen {
         modelPackage = "model";
 
         this.cliOptions.add(new CliOption(SERVICE_NAME, "The short name of your service"));
+        this.cliOptions.add(new CliOption(C_SERVICE_NAME, "The first letter capitalized short name of your service"));
         this.cliOptions.add(new CliOption(NPM_SCOPE, "The scope under which you want to publish generated npm package"));
         this.cliOptions.add(new CliOption(NPM_NAME, "The name under which you want to publish generated npm package"));
         this.cliOptions.add(new CliOption(NPM_VERSION, "The version of your npm package"));
@@ -85,6 +88,7 @@ public class NgModuleCodegen extends AbstractTypeScriptClientCodegen {
         supportingFiles.add(new SupportingFile("apis.mustache", "src" + File.separator + apiPackage().replace('.', File.separatorChar), "api.ts"));
         if (additionalProperties.containsKey(SERVICE_NAME)) {
             this.setServiceName(additionalProperties.get(SERVICE_NAME).toString());
+            this.setCServiceName(changefirstLetterToCapital(additionalProperties.get(SERVICE_NAME).toString()));
         }
         if (additionalProperties.containsKey(NPM_NAME)) {
             addNpmPackageGeneration();
@@ -92,6 +96,17 @@ public class NgModuleCodegen extends AbstractTypeScriptClientCodegen {
         supportingFiles.add(new SupportingFile("configuration.mustache", "src", "configuration.ts"));
         supportingFiles.add(new SupportingFile("variables.mustache", "src", "variables.ts"));
         supportingFiles.add(new SupportingFile("classType.mustache", "src", "classType.ts"));
+    }
+
+    private String changefirstLetterToCapital(String input) {
+        String output = input;
+        if (input != null && input.length() > 0) {
+            output = input.substring(0, 1).toUpperCase();
+            if (input.length() > 1) {
+                output = output + input.substring(1);
+            }
+        }
+        return output;
     }
 
     private void addNpmPackageGeneration() {
@@ -194,6 +209,14 @@ public class NgModuleCodegen extends AbstractTypeScriptClientCodegen {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    public String getCServiceName() {
+        return cServiceName;
+    }
+
+    public void setCServiceName(String cServiceName) {
+        this.cServiceName = cServiceName;
     }
 
     public String getNpmScope() {

@@ -1,5 +1,39 @@
+import {NgModule, ModuleWithProviders} from "@angular/core";
+import {HttpModule} from '@angular/http';
+import {BASE_PATH} from './variables';
+{{#apiInfo}}
+{{#apis}}
+{{#operations}}
+import { {{classname}} } from './api/{{ classname }}';
+{{/operations}}
+{{/apis}}
+{{/apiInfo}}
+
 export * from './api/api';
 export * from './model/models';
 export * from './variables';
 export * from './configuration';
 export * from './classType';
+
+@NgModule({
+    imports: [
+        HttpModule
+    ]
+})
+export class {{serviceName}}ApiModule {
+    static forRoot(basePath: string): ModuleWithProviders {
+        return {
+            ngModule: {{serviceName}}ApiModule,
+            providers: [
+{{#apiInfo}}
+{{#apis}}
+{{#operations}}
+                {{ classname }},
+{{/operations}}
+{{/apis}}
+{{/apiInfo}}
+                {provide: BASE_PATH, useValue: basePath},
+            ],
+        };
+    }
+}
