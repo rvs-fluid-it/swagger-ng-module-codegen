@@ -20,10 +20,10 @@ export * from './classType';
         HttpModule
     ]
 })
-export class {{serviceName}}ApiModule {
+export class {{prettyServiceName}}ApiModule {
     static forRoot(basePath: string): ModuleWithProviders {
         return {
-            ngModule: {{serviceName}}ApiModule,
+            ngModule: {{prettyServiceName}}ApiModule,
             providers: [
 {{#apiInfo}}
 {{#apis}}
