@@ -2,9 +2,11 @@ package be.fluid_it.tools.swagger.codegen;
 
 import io.swagger.codegen.*;
 
-public class HttpMethodAwareCodegenOperation extends CodegenOperation implements HttpMethodAware{
+public class EnrichedCodegenOperation extends CodegenOperation implements HttpMethodAware, WrapperAware{
+    public String returnDataType;
 
-    public HttpMethodAwareCodegenOperation(CodegenOperation codegenOperation) {
+
+    public EnrichedCodegenOperation(CodegenOperation codegenOperation) {
         super();
         for (CodegenProperty codegenProperty : codegenOperation.responseHeaders) {
             this.responseHeaders.add(codegenProperty);
@@ -62,6 +64,11 @@ public class HttpMethodAwareCodegenOperation extends CodegenOperation implements
         this.vendorExtensions = codegenOperation.vendorExtensions;
         this.nickname = codegenOperation.nickname; // legacy support
         this.operationIdLowerCase = codegenOperation.operationIdLowerCase; // for mardown documentation
+
+        if (isWrapped()) {
+            this.returnDataType = dataPropertyType();
+        }
+
     }
 
     public boolean isPOST() {
@@ -91,4 +98,54 @@ public class HttpMethodAwareCodegenOperation extends CodegenOperation implements
     public boolean isOtherHttpMethod() {
         return !isPOST() && !isGET() && !isPUT() && !isDELETE() && !isPATCH();
     }
+
+    @Override
+    public boolean isWrapped() {
+        //return WrapperUtil.isWrapped(this.returnContainer);
+        return WrapperUtil.isWrapped(this.notes);
+    }
+
+    @Override
+    public boolean hasSuccessProperty() {
+        //return WrapperUtil.hasSuccessProperty(this.returnContainer);
+        return WrapperUtil.hasSuccessProperty(this.notes);
+    }
+
+    @Override
+    public String successPropertyName() {
+        // return WrapperUtil.extractSuccessPropertyName(this.returnContainer);
+        return WrapperUtil.extractSuccessPropertyName(this.notes);
+    }
+
+    @Override
+    public String dataPropertyName() {
+        //return WrapperUtil.extractDataPropertyName(this.returnContainer);
+        return WrapperUtil.extractDataPropertyName(this.notes);
+    }
+
+    @Override
+    public String dataPropertyType() {
+        //return WrapperUtil.extractPropertyType(this.returnContainer, "model", dataPropertyName());
+        return WrapperUtil.extractPropertyType(this.notes, "models", dataPropertyName());
+    }
+
+    @Override
+    public boolean hasMessagesProperty() {
+        //return WrapperUtil.hasMessagesProperty(this.returnContainer);
+        return WrapperUtil.hasMessagesProperty(this.notes);
+    }
+
+    @Override
+    public String messagesPropertyName() {
+        //return WrapperUtil.extractMessagesPropertyName(this.returnContainer);
+        return WrapperUtil.extractMessagesPropertyName(this.notes);
+    }
+
+    @Override
+    public String messagesPropertyType() {
+        //return WrapperUtil.extractPropertyType(this.returnContainer, "model", messagesPropertyName());
+        return WrapperUtil.extractPropertyType(this.notes, "models", messagesPropertyName());
+    }
+
+
 }

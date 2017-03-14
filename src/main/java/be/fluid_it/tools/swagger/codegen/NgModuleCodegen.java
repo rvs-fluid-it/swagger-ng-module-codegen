@@ -280,7 +280,7 @@ public class NgModuleCodegen extends AbstractTypeScriptClientCodegen {
                         List httpMethodAwareOperation = new ArrayList();
                         for (Object untypedCodegenOperation : (List) operation) {
                             if (untypedCodegenOperation instanceof CodegenOperation) {
-                                httpMethodAwareOperation.add(new HttpMethodAwareCodegenOperation((CodegenOperation) untypedCodegenOperation));
+                                httpMethodAwareOperation.add(new EnrichedCodegenOperation((CodegenOperation) untypedCodegenOperation));
                             } else {
                                 httpMethodAwareOperation.add(untypedCodegenOperation);
                             }

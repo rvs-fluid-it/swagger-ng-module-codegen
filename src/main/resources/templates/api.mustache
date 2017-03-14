@@ -102,6 +102,20 @@ export class {{classname}} implements I{{classname}} {
      * @param c
      {{#allParams}}* @param {{paramName}} {{description}}
      {{/allParams}}*/
+     {{#isWrapped}}
+    {{nickname}}<T extends {{{returnDataType}}}>({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}}{{^-last}}, {{/-last}}{{/allParams}}): Observable<{{#returnType}}T{{/returnType}}{{^returnType}}{}{{/returnType}}> {
+{{^isListContainer}}        // noinspection TypeScriptValidateTypes{{/isListContainer}}
+        return this.{{nickname}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}})
+                .map((response: Response) => {
+                    if (response.status === 204) {
+                        return undefined;
+                    } else {
+                        return response.json().data;
+                    }
+                });
+        }
+     {{/isWrapped}}
+     {{^isWrapped}}
     {{nickname}}<T extends {{returnBaseType}}>({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}}, {{/allParams}}c?: ClassType<T>): Observable<{{#returnType}}T{{#isListContainer}}[]{{/isListContainer}}{{/returnType}}{{^returnType}}{}{{/returnType}}> {
 {{^isListContainer}}        // noinspection TypeScriptValidateTypes{{/isListContainer}}
         return this.{{nickname}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}})
@@ -120,7 +134,7 @@ export class {{classname}} implements I{{classname}} {
                     }
                 });
         }
-
+     {{/isWrapped}}
   {{/returnTypeIsPrimitive}}
 
 {{/operation}}
@@ -161,20 +175,6 @@ export class {{classname}} implements I{{classname}} {
         headers.set('{{baseName}}', String({{paramName}}));
 
 {{/headers}}
-
-        // to determine the Content-Type header
-//        let consumes: string[] = [
-//            {{#consumes}}
-//            '{{{mediaType}}}'{{#hasMore}}, {{/hasMore}}
-//            {{/consumes}}
-//        ];
-
-        // to determine the Accept header
-//        let produces: string[] = [
-//            {{#produces}}
-//            '{{{mediaType}}}'{{#hasMore}}, {{/hasMore}}
-//            {{/produces}}
-//        ];
 
 {{#authMethods}}
         // authentication ({{name}}) required
