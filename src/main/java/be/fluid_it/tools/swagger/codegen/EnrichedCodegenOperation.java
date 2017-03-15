@@ -1,10 +1,11 @@
 package be.fluid_it.tools.swagger.codegen;
 
 import io.swagger.codegen.*;
+import io.swagger.models.properties.RefProperty;
 
 public class EnrichedCodegenOperation extends CodegenOperation implements HttpMethodAware, WrapperAware{
     public String returnDataType;
-
+    public String returnDataProperty;
 
     public EnrichedCodegenOperation(CodegenOperation codegenOperation) {
         super();
@@ -67,6 +68,7 @@ public class EnrichedCodegenOperation extends CodegenOperation implements HttpMe
 
         if (isWrapped()) {
             this.returnDataType = dataPropertyType();
+            this.returnDataProperty = dataPropertyName();
         }
 
     }
@@ -101,51 +103,16 @@ public class EnrichedCodegenOperation extends CodegenOperation implements HttpMe
 
     @Override
     public boolean isWrapped() {
-        //return WrapperUtil.isWrapped(this.returnContainer);
-        return WrapperUtil.isWrapped(this.notes);
-    }
-
-    @Override
-    public boolean hasSuccessProperty() {
-        //return WrapperUtil.hasSuccessProperty(this.returnContainer);
-        return WrapperUtil.hasSuccessProperty(this.notes);
-    }
-
-    @Override
-    public String successPropertyName() {
-        // return WrapperUtil.extractSuccessPropertyName(this.returnContainer);
-        return WrapperUtil.extractSuccessPropertyName(this.notes);
+        return WrapperUtil.isWrapped(this.returnType);
     }
 
     @Override
     public String dataPropertyName() {
-        //return WrapperUtil.extractDataPropertyName(this.returnContainer);
-        return WrapperUtil.extractDataPropertyName(this.notes);
+        return WrapperUtil.extractDataPropertyName(this.returnType);
     }
 
     @Override
     public String dataPropertyType() {
-        //return WrapperUtil.extractPropertyType(this.returnContainer, "model", dataPropertyName());
-        return WrapperUtil.extractPropertyType(this.notes, "models", dataPropertyName());
+        return WrapperUtil.extractDataPropertyType(this.returnType);
     }
-
-    @Override
-    public boolean hasMessagesProperty() {
-        //return WrapperUtil.hasMessagesProperty(this.returnContainer);
-        return WrapperUtil.hasMessagesProperty(this.notes);
-    }
-
-    @Override
-    public String messagesPropertyName() {
-        //return WrapperUtil.extractMessagesPropertyName(this.returnContainer);
-        return WrapperUtil.extractMessagesPropertyName(this.notes);
-    }
-
-    @Override
-    public String messagesPropertyType() {
-        //return WrapperUtil.extractPropertyType(this.returnContainer, "model", messagesPropertyName());
-        return WrapperUtil.extractPropertyType(this.notes, "models", messagesPropertyName());
-    }
-
-
 }
