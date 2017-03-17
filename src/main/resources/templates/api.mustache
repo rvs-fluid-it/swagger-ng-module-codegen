@@ -47,7 +47,12 @@ export interface I{{classname}} {
     {{nickname}}({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}}{{^-last}}, {{/-last}} {{/allParams}}): Observable<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}>;
   {{/returnTypeIsPrimitive}}
   {{^returnTypeIsPrimitive}}
-    {{nickname}}<T extends {{returnBaseType}}>({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}}, {{/allParams}}c?: ClassType<T>): Observable<{{#returnType}}T{{#isListContainer}}[]{{/isListContainer}}{{/returnType}}{{^returnType}}{}{{/returnType}}>;
+    {{#isWrapped}}
+      {{nickname}}<T extends {{{returnDataType}}}>({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}}{{^-last}}, {{/-last}}{{/allParams}}): Observable<{{#returnType}}T{{/returnType}}{{^returnType}}{}{{/returnType}}>;
+    {{/isWrapped}}
+    {{^isWrapped}}
+      {{nickname}}<T extends {{returnBaseType}}>({{#allParams}}{{paramName}}{{^required}}?{{/required}}: {{{dataType}}}, {{/allParams}}c?: ClassType<T>): Observable<{{#returnType}}T{{#isListContainer}}[]{{/isListContainer}}{{/returnType}}{{^returnType}}{}{{/returnType}}>;
+    {{/isWrapped}}
   {{/returnTypeIsPrimitive}}
 {{/operation}}
 

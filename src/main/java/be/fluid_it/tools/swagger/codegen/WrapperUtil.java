@@ -32,10 +32,30 @@ public class WrapperUtil {
                 }
                 packagePrefix = packagePrefixBuffer.toString();
                 String classType = parts[parts.length - 1];
+                // TODO Refactor to get rid of duplication and add detect more built in typescript types
                 if (classType.startsWith("List")) {
-                    return "Array<" + packagePrefix + classType.substring(4) + ">";
+                    StringBuilder returnTypeBuilder = new StringBuilder("Array<");
+                    String itemClassType = classType.substring(4).trim();
+                    switch (itemClassType) {
+                        case "BigInteger":
+                            returnTypeBuilder.append("number");
+                            break;
+                        case "String":
+                            returnTypeBuilder.append("string");
+                            break;
+                        default:
+                            returnTypeBuilder.append(packagePrefix).append(itemClassType);
+                    }
+                    return returnTypeBuilder.append(">").toString();
                 } else {
-                    return packagePrefix + classType;
+                    switch (classType) {
+                        case "BigInteger":
+                            return "number";
+                        case "String":
+                            return "string";
+                        default:
+                            return packagePrefix + classType;
+                    }
                 }
             } else {
                 if (strippedReturnType.startsWith("List")) {

@@ -16,5 +16,7 @@ public class WrapperUtilTest {
     public void checkExtractDataPropertyType() {
         Assert.assertEquals("models.Sample", WrapperUtil.extractDataPropertyType("models.SampleWrappedAsData"));
         Assert.assertEquals("Array<models.Sample>", WrapperUtil.extractDataPropertyType("models.ListSampleWrappedAsData"));
+        Assert.assertEquals("Array<number>", WrapperUtil.extractDataPropertyType("models.ListBigIntegerWrappedAsData"));
+        Assert.assertEquals("string", WrapperUtil.extractDataPropertyType("models.StringWrappedAsData"));
     }
 }
